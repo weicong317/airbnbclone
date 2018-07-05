@@ -25,6 +25,9 @@ gem 'jbuilder', '~> 2.5'
 
 # use clearance to create user management system
 gem "clearance"
+
+#use figaro to protect from upload to github
+gem "figaro"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
