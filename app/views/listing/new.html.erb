@@ -1,0 +1,31 @@
+<% if flash %>
+  <% flash.each do |key, value| %>
+    <p><strong><%= key %>: <%= value[0] %></strong></p>
+  <% end %>
+<% end %>
+
+<%= form_with scope: :listing, url: listing_index_path, local: true do |form| %>
+  <p>
+    <%= form.label :"Name of room" %><br>
+    <%= form.text_field :name %>
+  </p>
+
+  <p>
+    <%= form.label :Description %><br>
+    <%= form.text_area :description %>
+  </p>
+
+  <p>
+    <%= form.label :Price %><br>
+    <%= form.number_field :price , step: 0.01%>
+  </p>
+
+  <p>
+    <%= form.label :Location %><br>
+    <%= form.text_area :location %>
+  </p>
+
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
