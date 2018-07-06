@@ -1,0 +1,26 @@
+<%= form_with scope: :listing, url: listing_path, local: true, method: :put do |form| %>
+  <% list = Listing.find(params[:id].to_i) %>
+  <p>
+    <%= form.label :"Name of room" %><br>
+    <%= form.text_field :name, value: "#{list.name}" %>
+  </p>
+
+  <p>
+    <%= form.label :Description %><br>
+    <%= form.text_area :description, value: "#{list.description}" %>
+  </p>
+
+  <p>
+    <%= form.label :Price %><br>
+    <%= form.number_field :price, step: 0.01, value: "#{list.price}" %>
+  </p>
+
+  <p>
+    <%= form.label :Location %><br>
+    <%= form.text_area :location, value: "#{list.location}" %>
+  </p>
+
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
