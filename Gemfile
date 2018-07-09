@@ -35,6 +35,8 @@ gem 'omniauth-google-oauth2'
 #use faker to generate data
 gem "faker"
 
+#use kaminari pagination to make page
+gem "kaminari"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
