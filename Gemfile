@@ -31,6 +31,10 @@ gem "figaro"
 
 #use omniauth to authenticate with google
 gem 'omniauth-google-oauth2'
+
+#use faker to generate data
+gem "faker"
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
