@@ -1,4 +1,4 @@
-<% Listing.all.order(:updated_at).reverse.each_with_index do |row, index| %>
+<% @lists.each_with_index do |row, index| %>
   <p><%= link_to "#{index + 1}", "/listing/#{row.id}" %>:</p>
   <p>Name of the room: <%= row.name %></p>
   <p>Description of the room: <%= row.description %></p>
@@ -7,3 +7,4 @@
   <p>Owner: <%= link_to "#{row.user.username}", "/#{row.user.username}" %></p>
   <br>
 <% end %>
+<%= paginate @lists %>

@@ -1,5 +1,6 @@
 class ListingController < ApplicationController
   def index
+    @lists = Listing.order(:id).page params[:page]
   end
 
   def create
