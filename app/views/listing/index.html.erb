@@ -1,10 +1,26 @@
 <% @lists.each_with_index do |row, index| %>
-  <p><%= link_to "#{index + 1}", "/listing/#{row.id}" %>:</p>
+  <p>
+    <%= link_to "#{index + 1}", "/listing/#{row.id}" %>:
+    <% if row.verification %>
+      <strong>Verified</strong>
+    <% end %>
+  </p>
   <p>Name of the room: <%= row.name %></p>
   <p>Description of the room: <%= row.description %></p>
   <p>Price: <%= row.price %></p>
   <p>Location: <%= row.location %></p>
   <p>Owner: <%= link_to "#{row.user.username}", "/#{row.user.username}" %></p>
+  <% if signed_in? %>
+    <% if !row.verification && (current_user.admin? || current_user.moderator?) %>
+        <p><%= button_to "Verify", "/listing/#{row.id}/verified", method: :patch %></p><br>
+      <% end %>
+      <% if row.verification && current_user.admin? %>
+        <p><%= button_to "Unverify", "/listing/#{row.id}/unverified", method: :patch %></p>
+      <% end %>
+      <% if current_user.admin? %>
+        <p><%= button_to "Delete", "/listing/#{row.id}", method: :delete %></p>
+    <% end %>
+  <% end %>
   <br>
 <% end %>
 <%= paginate @lists %>

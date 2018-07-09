@@ -1,4 +1,7 @@
 <% list = Listing.find(params[:id]) %>
+<% if list.verification %>
+  <strong>Verified</strong>
+<% end %>
 <p>Name of the room: <%= list.name %></p>
 <p>Description of the room: <%= list.description %></p>
 <p>Price: <%= list.price %></p>
@@ -6,6 +9,15 @@
 <p>Owner: <%= link_to "#{list.user.username}", "/#{list.user.username}" %></p>
 <br>
 <% if current_user.id === list.user.id %>
-  <%= button_to "Edit", "/listing/#{params[:id]}/edit", method: :get %><br>
-  <%= button_to "Delete", "/listing/#{params[:id]}", method: :delete %><br>
+  <%= button_to "Edit", "/listing/#{list[:id]}/edit", method: :get %><br>
+  <%= button_to "Delete", "/listing/#{list[:id]}", method: :delete %><br>
+<% end %>
+<% if !list.verification && (current_user.admin? || current_user.moderator?) %>
+  <p><%= button_to "Verify", "/listing/#{list.id}/verified", method: :patch %></p><br>
+<% end %>
+<% if list.verification && current_user.admin? %>
+  <p><%= button_to "Unverify", "/listing/#{list.id}/unverified", method: :patch %></p>
+<% end %>
+<% if current_user.admin? %>
+  <p><%= button_to "Delete", "/listing/#{list.id}", method: :delete %></p>
 <% end %>

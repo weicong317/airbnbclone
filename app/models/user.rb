@@ -20,4 +20,6 @@ class User < ApplicationRecord
     x = self.authentications.find_by(provider: 'google_oauth2')
     return x.token unless x.nil?
   end
+
+  enum role: [:admin, :customer, :moderator]
 end

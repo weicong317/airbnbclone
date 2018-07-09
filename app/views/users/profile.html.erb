@@ -1,3 +1,5 @@
-<% if current_user.id === User.find_by(username: params[:username]).id %>
+<% if signed_in? && current_user.id === User.find_by(username: params[:username]).id %>
   <%= button_to "Post", new_listing_path, method: :get %>
+<% else %>
+  This is <%= params[:username] %> page.
 <% end %>
