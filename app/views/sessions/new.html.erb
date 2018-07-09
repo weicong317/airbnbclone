@@ -2,25 +2,31 @@
   <h2><%= t(".title") %></h2>
 
   <%= form_for :session, url: session_path do |form| %>
-  <div class="text-field">
-    <%= form.label :email %>
-    <%= form.text_field :email, type: 'email' %>
-  </div>
+    <div class="text-field">
+      <%= form.label :email %>
+      <%= form.text_field :email, type: 'email' %>
+    </div>
 
-  <div class="password-field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
+    <div class="password-field">
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+    </div>
 
-  <div class="submit-field">
-    <%= form.submit %>
-  </div>
+    <div class="submit-field">
+      <%= form.submit %>
+    </div>
 
-  <div class="other-links">
-    <% if Clearance.configuration.allow_sign_up? %>
-      <p><%= link_to "Sign in with Google", "/auth/google_oauth2" %></p>
+    <div class="other-links">
+      <% if Clearance.configuration.allow_sign_up? %>
+        <p><%= link_to "Sign in with Google", "/auth/google_oauth2" %></p>
+      <% end %>
+      <%= link_to t(".forgot_password"), new_password_path %>
+    </div>
+  <% end %>
+
+  <% if flash %>
+    <% flash.each do |key, value| %>
+      <p><strong><%= key %>: <%= value %></strong></p>
     <% end %>
-    <%= link_to t(".forgot_password"), new_password_path %>
-  </div>
-<% end %>
+  <% end %>
 </div>

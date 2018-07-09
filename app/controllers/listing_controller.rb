@@ -1,4 +1,6 @@
 class ListingController < ApplicationController
+  before_action :require_login, only: [:show]
+
   def index
     @lists = Listing.order(:id).page params[:page]
   end
@@ -32,12 +34,31 @@ class ListingController < ApplicationController
   end
 
   def destroy
-    Listing.find(params[:id].to_i).delete
+    Listing.find(params[:id]).delete
     redirect_to listing_index_path
   end
 
+  def verify
+    list = Listing.find(params[:id])
+    list.update(verification: 1)
+    redirect_to listing_path
+  end
+
+  def unverify
+    list = Listing.find(params[:id])
+    list.update(verification: 0)
+    redirect_to listing_path
+  end
+  
   private
   def create_params
     params.require(:listing).permit(:name, :description, :price, :location)
+  end
+
+  def require_login
+    unless signed_in?
+      flash[:Error] = "You must be logged in to access this section"
+      redirect_to sign_in_path
+    end
   end
 end
