@@ -1,4 +1,6 @@
 class Listing < ApplicationRecord
+  mount_uploaders :rooms, RoomsUploader
+
   belongs_to :user
 
   validates :name, presence: true

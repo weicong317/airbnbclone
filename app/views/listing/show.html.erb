@@ -2,6 +2,13 @@
 <% if list.verification %>
   <strong>Verified</strong>
 <% end %>
+<p>
+  <% if !list.rooms.empty? %>
+    <% list.rooms.each do |url| %>
+      <%= image_tag url.thumb.url.to_s %>
+    <% end %>
+  <% end %>
+</p>
 <p>Name of the room: <%= list.name %></p>
 <p>Description of the room: <%= list.description %></p>
 <p>Price: <%= list.price %></p>

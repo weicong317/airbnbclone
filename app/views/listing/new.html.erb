@@ -26,6 +26,19 @@
   </p>
 
   <p>
+    <%= form.label :"Upload your room images" %><br>
+    <%= form.file_field :rooms, multiple: true %>
+    <%= form.hidden_field :rooms_cache %>
+  </p>
+
+  <p>
+    <label>
+      <%= form.check_box :remove_rooms %>
+      Remove previous room images
+    </label>
+  </p>
+
+  <p>
     <%= form.submit %>
   </p>
 <% end %>
