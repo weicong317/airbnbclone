@@ -1,4 +1,17 @@
 <% if signed_in? && current_user.id === User.find_by(username: params[:username]).id %>
+  <%= form_with scope: :user_avatar, url: "/users/avatar", local: true do |form| %>
+    <%= form.label :"Upload your avatar" %><br>
+    <%= form.file_field :avatar, multiple: true %>
+    <%= form.hidden_field :avatar_cache %>
+    <p>
+      <label>
+        <%= form.check_box :remove_avatar %>
+        Remove avatar
+      </label>
+    </p>
+    <%= form.submit %>
+  <% end %>
+  <hr>
   <%= button_to "Post", new_listing_path, method: :get %>
 <% else %>
   This is <%= params[:username] %> page.

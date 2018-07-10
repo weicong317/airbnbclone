@@ -25,4 +25,6 @@ Rails.application.routes.draw do
 
   patch "/listing/:id/verified" => "listing#verify"
   patch "/listing/:id/unverified" => "listing#unverify"
+
+  post "/:username/avatar" => "users#upload_avatar"
 end
