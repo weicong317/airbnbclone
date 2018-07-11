@@ -4,6 +4,7 @@ class User < ApplicationRecord
   mount_uploaders :avatar, AvatarUploader
 
   has_many :listings
+  has_many :reservations
   has_many :authentications, dependent: :destroy
 
   def self.create_with_auth_and_hash(authentication, auth_hash)

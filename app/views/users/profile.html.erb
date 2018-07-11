@@ -14,5 +14,16 @@
   <hr>
   <%= button_to "Post", new_listing_path, method: :get %>
 <% else %>
-  This is <%= params[:username] %> page.
+  <p>
+    Reservation made:
+    <% User.find_by(username: params[:username]).reservations.each_with_index do |item| %>
+      <ol>
+        <li><%= link_to "#{item.listing.name}", listing_path(item.listing.id) %> Owned by: <%= link_to "#{item.listing.user.username}", "/#{item.listing.user.username}" %>
+          <ul>
+            <li>From: <%= item.date_in %> To <%= item.date_out %> <%= button_to "See reservation", reservation_path(item.id) , method: :get %> </li>
+          </ul>
+        </li>
+      </ol>
+    <% end %>
+  </p>  
 <% end %>

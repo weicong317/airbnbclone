@@ -1,0 +1,51 @@
+<% if flash %>
+  <% flash.each do |key, value| %>
+    <p><strong><%= key %>: <%= value[0] %></strong></p>
+  <% end %>
+<% end %>
+
+<%= form_with scope: :reservation, url: listing_reservation_index_path, local: true do |form| %>
+  <div class="container">
+    <div class='col-md-5'>
+      <div class="form-group">
+        <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+          <%= form.text_field :date_in, class: "form-control datetimepicker-input", 'data-target': "#datetimepicker4" %>
+          <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-5'>
+      <div class="form-group">
+        <div class="input-group date" id="datetimepicker5" data-target-input="nearest">
+          <%= form.text_field :date_out, class: "form-control datetimepicker-input", 'data-target': "#datetimepicker5" %>
+          <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker4').datetimepicker({
+            format: 'LL'
+        });
+        $('#datetimepicker5').datetimepicker({
+            format: 'LL',
+            useCurrent: false
+        });
+        $("#datetimepicker4").on("change.datetimepicker", function (e) {
+            $('#datetimepicker5').datetimepicker('minDate', e.date);
+        });
+        $("#datetimepicker5").on("change.datetimepicker", function (e) {
+            $('#datetimepicker4').datetimepicker('maxDate', e.date);
+        });
+    });
+</script>
