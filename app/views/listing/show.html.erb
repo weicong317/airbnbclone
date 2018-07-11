@@ -15,7 +15,9 @@
 <p>Location: <%= list.location %></p>
 <p>Owner: <%= link_to "#{list.user.username}", "/#{list.user.username}" %></p>
 <br>
-<% if current_user.id === list.user.id %>
+<% if signed_in? && current_user.id != list.user.id %>
+  <%= button_to "Book", new_listing_reservation_path(list.id), method: :get %>
+<% elsif signed_in? && current_user.id === list.user.id %>
   <%= button_to "Edit", "/listing/#{list[:id]}/edit", method: :get %><br>
   <%= button_to "Delete", "/listing/#{list[:id]}", method: :delete %><br>
 <% end %>

@@ -50,6 +50,12 @@ gem "mini_magick"
 #to use with carrierwave AWS-S3
 gem "fog-aws"
 
+#date picker
+gem 'bootstrap'
+gem 'jquery-rails'
+gem 'momentjs-rails'
+gem 'bootstrap4-datetime-picker-rails'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

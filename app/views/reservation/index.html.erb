@@ -1,0 +1,19 @@
+  <p>
+    <% if @list.verification %>
+      <strong>Verified</strong>
+    <% end %>
+  </p>
+  <p>Name of the room: <%= @list.name %></p>
+  <p>Description of the room: <%= @list.description %></p>
+  <p>Price: <%= @list.price %></p>
+  <p>Location: <%= @list.location %></p>
+  <p>Owner: <%= link_to "#{@list.user.username}", "/#{@list.user.username}" %></p>
+  <br>
+  <p>Booked date:
+    <ul>
+    <% @reservation.each_with_index do |row, index| %>
+      <li>From: <strong><%= row.date_in %></strong> to <strong><%= row.date_out %></strong> By: <%= link_to "#{row.user.username}", "/#{row.user.username}" %></li>
+    </ul>
+  </p>
+<% end %>
+<%= paginate @reservation %>
