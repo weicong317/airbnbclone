@@ -3,5 +3,6 @@ class HomepageController < ApplicationController
   end
 
   def about
+    ReservationMailer.welcome_email.deliver_now
   end
 end
