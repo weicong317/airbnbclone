@@ -58,6 +58,9 @@ gem 'bootstrap4-datetime-picker-rails'
 
 # use to make payment
 gem 'braintree'
+
+# to view the email without sending them
+gem "letter_opener", :group => :development
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
