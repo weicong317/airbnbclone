@@ -8,6 +8,6 @@ class Listing < ApplicationRecord
   validates :description, presence: true
   validates :price, presence: true
   validates :address, presence: true
-  validates :rooms, presence: true
+  # validates :rooms
   validates :country, presence: true
 end

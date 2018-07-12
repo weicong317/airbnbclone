@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "/listing/:listing_id/reservation/payment/new" => "braintree#new"
+  post "/listing/:listing_id/reservation/payment/checkout" => "braintree#checkout"
   get 'homepage/about'
   resources :passwords, controller: "clearance/passwords", only: [:create, :new]
   resource :session, controller: "clearance/sessions", only: [:create]

@@ -60,6 +60,8 @@ GEM
     bootstrap4-datetime-picker-rails (0.1.7)
       jquery-rails (~> 4.2, >= 4.2.0)
       momentjs-rails (~> 2.10, >= 2.10.5)
+    braintree (2.89.0)
+      builder (>= 2.0.0)
     builder (3.2.3)
     byebug (10.0.2)
     capybara (3.3.1)
@@ -283,6 +285,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap
   bootstrap4-datetime-picker-rails
+  braintree
   byebug
   capybara (>= 2.15, < 4.0)
   carrierwave
