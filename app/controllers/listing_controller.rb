@@ -1,8 +1,8 @@
 class ListingController < ApplicationController
-  before_action :require_login, only: [:show]
+  # before_action :require_login, only: [:show]
 
   def index
-    @lists = Listing.order(:id).page params[:page]
+    @lists = Listing.order(:id).reverse_order.page params[:page]
   end
 
   def create
