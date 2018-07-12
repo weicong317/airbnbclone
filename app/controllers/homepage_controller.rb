@@ -3,6 +3,7 @@ class HomepageController < ApplicationController
   end
 
   def about
-    ReservationMailer.welcome_email.deliver_now
+    ReservationJob.perform_later(current_user)
+    #auto render about
   end
 end
