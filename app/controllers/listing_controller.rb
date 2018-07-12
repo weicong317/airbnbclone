@@ -52,7 +52,7 @@ class ListingController < ApplicationController
   
   private
   def create_params
-    params.require(:listing).permit(:name, :description, :price, :location, {rooms: []})
+    params.require(:listing).permit(:name, :description, :price, :address, :country, {rooms: [], amenities: []})
   end
 
   def require_login

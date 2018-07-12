@@ -56,6 +56,8 @@ gem 'jquery-rails'
 gem 'momentjs-rails'
 gem 'bootstrap4-datetime-picker-rails'
 
+# use to make payment
+gem 'braintree'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -8,7 +8,6 @@ class ReservationController < ApplicationController
 
   def create
     @reservation = Reservation.new(create_params)
-    byebug
     @reservation.update(user_id: current_user.id, listing_id: params[:listing_id])
     if @reservation.save
       redirect_to listing_reservation_index_path
