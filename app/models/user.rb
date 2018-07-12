@@ -1,10 +1,10 @@
 class User < ApplicationRecord
   include Clearance::User
 
-  mount_uploaders :avatar, AvatarUploader
+  mount_uploader :avatar, AvatarUploader
 
-  has_many :listings
-  has_many :reservations
+  has_many :listings, dependent: :destroy
+  has_many :reservations, dependent: :destroy
   has_many :authentications, dependent: :destroy
 
   def self.create_with_auth_and_hash(authentication, auth_hash)
@@ -24,5 +24,5 @@ class User < ApplicationRecord
     return x.token unless x.nil?
   end
 
-  enum role: [:admin, :customer, :moderator]
+  enum role: [:admin, :moderator, :customer]
 end

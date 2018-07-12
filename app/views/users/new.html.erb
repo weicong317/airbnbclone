@@ -1,33 +1,34 @@
-<div id="clearance" class="sign-up">
-  <h2><%= t(".title") %></h2>
-
-  <%= form_for @user do |form| %>
+<div id="clearance" class="sign-up text-center">
+  <%= form_for @user , html: {class: "form-signin"} do |form| %>
+    <%= link_to image_tag("01_06_2017_airbnb_800x600.gif", class: "mb-4", alt: "Home Page", style: "width: 72px; height: 72px;"), root_path %>
     <div class="text-field">
-      <%= form.label :name %>
-      <%= form.text_field :name %>
+      <%= form.label :name, "Name", class: "sr-only" %>
+      <%= form.text_field :name, class: "form-control", placeholder: "Name" %>
     </div>
 
     <div class="text-field">
-      <%= form.label :username %>
-      <%= form.text_field :username %>
+      <%= form.label :username, "Username", class: "sr-only" %>
+      <%= form.text_field :username, class: "form-control", placeholder: "Username" %>
     </div>
 
     <div class="text-field">
-      <%= form.label :email %>
-      <%= form.text_field :email, type: 'email' %>
+      <%= form.label :email, "Email address", class: "sr-only" %>
+      <%= form.text_field :email, type: 'email', class: "form-control", placeholder: "Email address" %>
     </div>
 
     <div class="password-field">
-      <%= form.label :password %>
-      <%= form.password_field :password %>
+      <%= form.label :password, "Password", class: "sr-only" %>
+      <%= form.password_field :password, class: "form-control", placeholder: "Password" %>
     </div>
 
     <div class="submit-field">
-      <%= form.submit %>
+      <br>
+      <%= form.submit :"Sign up", class: "btn btn-lg btn-primary btn-block" %>
     </div>
 
     <div class="other-links">
-      <p><%= link_to "Sign up with Google", "/auth/google_oauth2" %></p>
+      <br>
+      <%= button_to "Sign up with Google", "/auth/google_oauth2", method: :get, class: "btn btn-lg btn-primary btn-block"%>
     </div>
   <% end %>
 </div>

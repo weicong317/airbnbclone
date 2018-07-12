@@ -1,4 +1,6 @@
 class ReservationController < ApplicationController
+  before_action :require_login
+
   def index
     @list = Listing.find(params[:listing_id])
     @reservation = Reservation.where(listing_id: params[:listing_id]).order(:id).page params[:page]

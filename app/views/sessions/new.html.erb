@@ -1,32 +1,37 @@
-<div id="clearance" class="sign-in">
-  <h2><%= t(".title") %></h2>
+<div id="clearance" class="sign-in text-center">
+  <%= form_for :session, url: session_path, html: {class: "form-signup"} do |form| %>
+    <%= link_to image_tag("01_06_2017_airbnb_800x600.gif", class: "mb-4", alt: "Home Page", style: "width: 72px; height: 72px;"), root_path %>
 
-  <%= form_for :session, url: session_path do |form| %>
+    <% if flash %>
+      <% flash.each do |key, value| %>
+        <div class="alert alert-danger" role="alert">
+          <strong><%= value %></strong>
+          <br>
+        </div>
+        <% end %>
+    <% end %>
+
     <div class="text-field">
-      <%= form.label :email %>
-      <%= form.text_field :email, type: 'email' %>
+      <%= form.label :email, "Email address", class: "sr-only" %>
+      <%= form.text_field :email, type: 'email', class: "form-control", placeholder: "Email address" %>
     </div>
 
     <div class="password-field">
-      <%= form.label :password %>
-      <%= form.password_field :password %>
+      <%= form.label :password, "Password", class: "sr-only" %>
+      <%= form.password_field :password, class: "form-control", placeholder: "Password" %>
     </div>
 
+
     <div class="submit-field">
-      <%= form.submit %>
+      <br>
+      <%= form.submit :"Sign in", class: "btn btn-lg btn-primary btn-block" %>
     </div>
 
     <div class="other-links">
+      <br>
       <% if Clearance.configuration.allow_sign_up? %>
-        <p><%= link_to "Sign in with Google", "/auth/google_oauth2" %></p>
+        <%= link_to "Sign in with Google", "/auth/google_oauth2", method: :get, class: "btn btn-lg btn-primary btn-block"%>
       <% end %>
-      <%= link_to t(".forgot_password"), new_password_path %>
     </div>
-  <% end %>
-
-  <% if flash %>
-    <% flash.each do |key, value| %>
-      <p><strong><%= key %>: <%= value %></strong></p>
-    <% end %>
   <% end %>
 </div>
