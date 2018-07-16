@@ -19,16 +19,16 @@ class ReservationController < ApplicationController
         else
           error_messages = @reservation.errors.messages
           error_messages.each do |key, value|
-            flash[:"#{key}"] = value
+            flash.now[:"#{key}"] = value
           end
           redirect_to listing_path(params[:listing_id])
         end
       else
-        flash[:notice] = "Chosen date has been taken!"
+        flash.now[:notice] = "Chosen date has been taken!"
         redirect_to listing_path(params[:listing_id])
       end
     else
-      flash[:notice] = "You are the owner of the room!"
+      flash.now[:notice] = "You are the owner of the room!"
       redirect_to listing_path(params[:listing_id])
     end
   end

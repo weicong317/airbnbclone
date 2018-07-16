@@ -6,9 +6,9 @@ class ListingController < ApplicationController
       temp = search_params[:country]
       if ISO3166::Country.find_country_by_name(temp)
         country_code = ISO3166::Country.find_country_by_name(temp).alpha2
-        @lists = Listing.where('country = "#{country_code}" AND verification = 1').order(:id).reverse_order.page params[:page]
+        @lists = Listing.where("country = '#{country_code}' AND verification = true").order(:id).reverse_order.page params[:page]
       else
-        flash[:notice] = " No such country!"
+        flash.now[:notice] = " No such country!"
         @lists = Listing.where(verification: 1).order(:id).reverse_order.page params[:page]
       end
     else
@@ -24,7 +24,7 @@ class ListingController < ApplicationController
     else
       error_messages = @listing.errors.messages
       error_messages.each do |key, value|
-        flash[:"#{key}"] = value
+        flash.now[:"#{key}"] = value
       end
       redirect_to new_listing_path
     end
