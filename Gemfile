@@ -64,6 +64,10 @@ gem "letter_opener", :group => :development
 
 # to perform background job
 gem 'sidekiq'
+
+# to make country select box
+gem 'country_select'
+gem 'countries'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

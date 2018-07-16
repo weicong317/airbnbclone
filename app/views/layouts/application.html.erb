@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <%= favicon_link_tag "favicon.ico" %>
     <title>Airbnb</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -22,8 +23,33 @@
             <%= link_to "Rooms", listing_index_path, class: "nav-link" %>
           </li>
           <% if signed_in? %>
+            <% if current_user.role === "moderator" %>
+              <li class="nav-item active my-auto">
+                <%= link_to "Pending", "/pending", class: "nav-link" %>
+              </li>
+              <li class="nav-item active my-auto">
+                <%= link_to "Verified", "/verified", class: "nav-link" %>
+              </li>
+            <% end %>
+            <% if current_user.role === "admin" %>
+              <li class="nav-item active my-auto">
+                <%= link_to "Pending", "/pending", class: "nav-link" %>
+              </li>
+              <li class="nav-item active my-auto">
+                <%= link_to "Verified", "/verified", class: "nav-link" %>
+              </li>
+              <li class="nav-item active my-auto">
+                <%= link_to "Users", "/users", class: "nav-link" %>
+              </li>
+            <% end %>
             <li class="nav-item active my-auto">
-              <%= link_to (image_tag current_user.avatar.url.to_s, alt: "Profile Image", style: "width: 40px; height: 40px;"), "/#{current_user.username}", class: "nav-link" %>
+              <% if current_user.avatar.size != 0 %>
+                <%= link_to (image_tag current_user.avatar.url.to_s, alt: "Profile Image", class: "rounded-circle", style: "width: 40px; height: 40px;"), "/#{current_user.username}", class: "nav-link" %>
+              <% elsif current_user.google_url != nil %>
+                <%= link_to (image_tag current_user.google_url, alt: "Profile Image", class: "rounded-circle", style: "width: 40px; height: 40px;"), "/#{current_user.username}", class: "nav-link" %>
+              <% else %>
+                <%= link_to (image_tag "profile.png", alt: "Profile Image", class: "rounded-circle", style: "width: 40px; height: 40px;"), "/#{current_user.username}", class: "nav-link" %>
+              <% end %>
             </li>
             <li class="nav-item active my-auto">
               <%= link_to 'Sign out', sign_out_path, class: "nav-link", method: :delete %>

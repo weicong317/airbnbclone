@@ -1,26 +1,41 @@
 class ReservationController < ApplicationController
   before_action :require_login
 
-  def index
-    @list = Listing.find(params[:listing_id])
-    @reservation = Reservation.where(listing_id: params[:listing_id]).order(:id).page params[:page]
-  end
-
   def create
-    @reservation = Reservation.new(create_params)
-    @reservation.update(user_id: current_user.id, listing_id: params[:listing_id])
-    if @reservation.save
-      redirect_to listing_reservation_index_path
-    else
-      error_messages = @reservation.errors.messages
-      error_messages.each do |key, value|
-        flash[:"#{key}"] = value
+    overlapping = 0
+    if current_user.id != Listing.find(params[:listing_id]).user.id
+      @reservation = Reservation.new(create_params)
+      Reservation.where(listing_id: params[:listing_id]).each do |row|
+        if row.date_in <= @reservation.date_out && @reservation.date_in <= row.date_in
+          overlapping = 1
+          break
+        end
       end
-      redirect_to new_listing_reservation_path
+      if overlapping === 0
+        @reservation.update(user_id: current_user.id, listing_id: params[:listing_id], payment: false)
+        if @reservation.save
+          ReservationJob.perform_later(current_user, @reservation)
+          redirect_to reservation_path(@reservation.id)
+        else
+          error_messages = @reservation.errors.messages
+          error_messages.each do |key, value|
+            flash[:"#{key}"] = value
+          end
+          redirect_to listing_path(params[:listing_id])
+        end
+      else
+        flash[:notice] = "Chosen date has been taken!"
+        redirect_to listing_path(params[:listing_id])
+      end
+    else
+      flash[:notice] = "You are the owner of the room!"
+      redirect_to listing_path(params[:listing_id])
     end
   end
 
-  def new
+  def update
+    Reservation.find(params[:id]).update(create_params)
+    redirect_to reservation_path(params[:id])
   end
 
   def show

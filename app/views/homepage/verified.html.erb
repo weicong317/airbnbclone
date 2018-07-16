@@ -1,0 +1,27 @@
+<div class="p-2">
+  <h2>Number of room verified: <span class="badge badge-primary badge-pill"><%= Listing.where(verification: 1).size %></span></h2>
+</div>
+<div>
+  <% if Listing.where(verification: 1).size > 0 %>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" class="text-center"></th>
+          <th scope="col" class="text-center">Name of room</th>
+          <th scope="col" class="text-center">Posted by</th>
+          <th scope="col" class="text-center">Times of booked</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Listing.where(verification: 1).order(:id).each_with_index do |row, index| %>
+          <tr>
+            <th scope="row" class="text-center"><%= index + 1 %></th>
+            <td class="text-center"><%= link_to "#{row.name}", listing_path(row.id) %></td>
+            <td class="text-center"><%= row.user.username %></td>
+            <td class="text-center"><%= row.reservations.size %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

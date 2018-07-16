@@ -1,6 +1,8 @@
 <div class="demo-frame">
-
-  <%= form_for :checkout_form, url: "/listing/#{params[:listing_id]}/reservation/payment/checkout", html: { id: "cardForm"} do |form| %>
+  <div class="pt-5 pb-2 text-center">
+    <h2>Payment Page</h2>
+  </div>
+  <%= form_for :checkout_form, url: "/listing/#{params[:listing_id]}/reservation/#{params[:id]}/payment/checkout", html: { id: "cardForm"} do |form| %>
 
     <%= form.label :card_number, "Credit Card Number", html: {class: "hosted-fields--label"} %>
     <div id="card-number" class="hosted-field"></div>
@@ -13,8 +15,10 @@
 
     <%= form.hidden_field "payment_method_nonce" %>
 
+    <%= form.hidden_field "amount", value: (((@reservation.date_out - @reservation.date_in).to_i) * @reservation.listing.price) %>
+
     <div class="button-container">
-      <%= form.submit "Purchase", disabled: true, class: "btn btn-primary", id: "submit-payment-btn" %>
+      <%= form.submit "Confirm Booking", disabled: true, class: "btn btn-primary", id: "submit-payment-btn" %>
     </div>
   <% end %>
 </div>

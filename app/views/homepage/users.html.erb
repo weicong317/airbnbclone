@@ -1,0 +1,72 @@
+<div class="p-2">
+  <h2>Total number of user: <span class="badge badge-primary badge-pill"><%= User.all.size %></span></h2>
+</div>
+<div>
+  <p class="p-2">Total number of customer: <span class="badge badge-primary badge-pill"><%= User.where(role: "customer").size %></span></p>
+  <% if User.where(role: "customer").size > 0 %>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" class="text-center"></th>
+          <th scope="col" class="text-center">User</th>
+          <th scope="col" class="text-center">Number of room posted</th>
+          <th scope="col" class="text-center">Number of room booked</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% User.where(role: "customer").order(:id).each_with_index do |row, index| %>
+          <tr>
+            <th scope="row" class="text-center"><%= index + 1 %></th>
+            <td class="text-center"><%= link_to "#{row.username}", "/#{row.username}" %></td>
+            <td class="text-center"><%= row.listings.size %></td>
+            <td class="text-center"><%= row.reservations.size %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div>
+  <p class="p-2">Total number of moderator: <span class="badge badge-primary badge-pill"><%= User.where(role: "moderator").size %></span></p>
+  <% if User.where(role: "moderator").size > 0 %>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" class="text-center"></th>
+          <th scope="col" class="text-center">User</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% User.where(role: "moderator").order(:id).each_with_index do |row, index| %>
+          <tr>
+            <th scope="row" class="text-center"><%= index + 1 %></th>
+            <td class="text-center"><%= link_to "#{row.username}", "/#{row.username}" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div>
+  <p class="p-2">Total number of admin: <span class="badge badge-primary badge-pill"><%= User.where(role: "admin").size %></span></p>
+  <% if User.where(role: "admin").size > 0 %>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" class="text-center"></th>
+          <th scope="col" class="text-center">User</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% User.where(role: "admin").order(:id).each_with_index do |row, index| %>
+          <tr>
+            <th scope="row" class="text-center"><%= index + 1 %></th>
+            <td class="text-center"><%= link_to "#{row.username}", "/#{row.username}" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

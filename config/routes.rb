@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  get "/listing/:listing_id/reservation/payment/new" => "braintree#new"
-  post "/listing/:listing_id/reservation/payment/checkout" => "braintree#checkout"
+  get "/listing/:listing_id/reservation/:id/payment/new" => "braintree#new"
+  post "/listing/:listing_id/reservation/:id/payment/checkout" => "braintree#checkout"
   get 'homepage/about'
   resources :passwords, controller: "clearance/passwords", only: [:create, :new]
   resource :session, controller: "clearance/sessions", only: [:create]
@@ -20,13 +20,19 @@ Rails.application.routes.draw do
     resources :reservation, only: [:create, :index, :new]
   end
 
-  resources :reservation, only: [:destroy, :show]
+  resources :reservation, only: [:destroy, :show, :update]
 
   root "homepage#index" 
 
   get "/auth/:provider/callback" => "sessions#create_from_omniauth"
 
+  get "/users" => "homepage#users"
+  get "/pending" => "homepage#pending"
+  get "/verified" => "homepage#verified"
+
   get "/:username" => "users#new"
+  delete "/:username" => "users#destroy"
+  post "/:username" => "users#edit"
 
   patch "/listing/:id/verified" => "listing#verify"
   patch "/listing/:id/unverified" => "listing#unverify"

@@ -2,8 +2,12 @@ class HomepageController < ApplicationController
   def index
   end
 
-  def about
-    ReservationJob.perform_later(current_user)
-    #auto render about
+  def users
+  end
+
+  def pending
+  end
+
+  def verified
   end
 end

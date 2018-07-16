@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi, <%= @user.name %></h1>
+    <p>
+      You have paid for the booking made for <%= @reservation.listing.name %> from <%= @reservation.date_in %> to <%= @reservation.date_out %>.
+    </p>
+    <p>Hope you have a good stay and see you soon!</p>
+  </body>
+</html>

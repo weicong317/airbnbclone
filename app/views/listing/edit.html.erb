@@ -1,26 +1,90 @@
-<%= form_with scope: :listing, url: listing_path, local: true, method: :put do |form| %>
-  <% list = Listing.find(params[:id].to_i) %>
-  <p>
-    <%= form.label :"Name of room" %><br>
-    <%= form.text_field :name, value: "#{list.name}" %>
-  </p>
+<div class="container my-3">
+  <h2>Update Room Detail</h2>
+  <hr>
+  <%= form_with scope: :listing, url: listing_path, local: true, method: :patch do |form| %>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <%= form.label :"Name of room" %>
+        <%= form.text_field :name, class: "form-control", value: "#{@list.name}" %>
+      </div>
+    </div>
 
-  <p>
-    <%= form.label :Description %><br>
-    <%= form.text_area :description, value: "#{list.description}" %>
-  </p>
+      <div class="form-group">
+        <%= form.label :"Description of room" %>
+        <%= form.text_area :description, class: "form-control", value: "#{@list.description}" %>
+      </div>
 
-  <p>
-    <%= form.label :Price %><br>
-    <%= form.number_field :price, step: 0.01, value: "#{list.price}" %>
-  </p>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.label :"Price per night" %>
+        <%= form.number_field :price , step: 0.01, class: "form-control", value: "#{@list.price}" %>
+      </div>
+    </div>
 
-  <p>
-    <%= form.label :Location %><br>
-    <%= form.text_area :location, value: "#{list.location}" %>
-  </p>
+    <div class="form-group">
+      <%= form.label :Address %>
+      <%= form.text_area :address, class: "form-control", value: "#{@list.address}" %>
+    </div>
 
-  <p>
-    <%= form.submit %>
-  </p>
-<% end %>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.label :Country %>
+        <%= form.country_select :country, selected: "#{@list.country}", class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.label :"Select amenities available (can tick more than 1):" %>
+        <div class="container">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <% if @list.amenities.include? "wifi" %>
+                  <%= form.check_box :amenities, {multiple: true, checked: true}, "wifi", nil %> 
+                <% else %>
+                  <%= form.check_box :amenities, {multiple: true}, "wifi", nil %> 
+                <% end %>
+                <%= form.label :wifi, "wifi", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <% if @list.amenities.include? "parking" %>
+                  <%= form.check_box :amenities, {multiple: true, checked: true}, "parking", nil %>
+                <% else %>
+                  <%= form.check_box :amenities, {multiple: true}, "parking", nil %>
+                <% end %>
+                <%= form.label :parking, "parking", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <% if @list.amenities.include? "cooking" %>
+                  <%= form.check_box :amenities, {multiple: true, checked: true}, "cooking", nil %>
+                <% else %>
+                  <%= form.check_box :amenities, {multiple: true}, "cooking", nil %>
+                <% end %>
+                <%= form.label :cooking, "cooking", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <% if @list.amenities.include? "swimming pool" %>
+                  <%= form.check_box :amenities, {multiple: true, checked: true}, "swimming pool", nil %>
+                <% else %>
+                  <%= form.check_box :amenities, {multiple: true}, "swimming pool", nil %>
+                <% end %>
+                <%= form.label :"swimming pool", "swimming pool", class: "form-check-label" %>
+              </div>                        
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit "Update", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
