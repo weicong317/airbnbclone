@@ -1,6 +1,12 @@
-<div id="clearance" class="sign-up text-center">
-  <%= form_for @user , html: {class: "form-signin"} do |form| %>
+<div id="clearance" class="sign-up text-center form-signin">
+  <%= form_for @user do |form| %>
     <%= link_to image_tag("01_06_2017_airbnb_800x600.gif", class: "mb-4", alt: "Home Page", style: "width: 72px; height: 72px;"), root_path %>
+    <% flash.each do |key, value| %>
+      <div class="alert alert-danger">
+        <strong><%= value %></strong>
+        <br>
+      </div>
+    <% end %>
     <div class="text-field">
       <%= form.label :name, "Name", class: "sr-only" %>
       <%= form.text_field :name, class: "form-control", placeholder: "Name" %>
@@ -25,10 +31,11 @@
       <br>
       <%= form.submit :"Sign up", class: "btn btn-lg btn-primary btn-block" %>
     </div>
-
-    <div class="other-links">
-      <br>
-      <%= button_to "Sign up with Google", "/auth/google_oauth2", method: :get, class: "btn btn-lg btn-primary btn-block"%>
-    </div>
   <% end %>
+  <div class="other-links">
+    <br>
+    <% if Clearance.configuration.allow_sign_up? %>
+      <%= button_to "Sign up with Google", "/auth/google_oauth2", method: :get, class: "btn btn-lg btn-primary btn-block"%>
+    <% end %>
+  </div>
 </div>

@@ -1,6 +1,7 @@
 class ReservationMailer < ApplicationMailer
-  def welcome_email(user)
-    @user =user
-    mail(to: "vuyev@creazionisa.com", subject: 'Welcome to My Awesome Site')
+  def reservation_made(user, reservation)
+    @user = user
+    @reservation = reservation
+    mail(to: @user.email, subject: 'Thanks for your booking!')
   end
 end

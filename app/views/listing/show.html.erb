@@ -1,27 +1,26 @@
 <main role="main">
-  <% list = Listing.find(params[:id]) %> 
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
-      <% if !list.rooms.empty? %>
+      <% if !@list.rooms.empty? %>
         <% temp_num = 0 %>
-        <% while temp_num < list.rooms.size %>
+        <% while temp_num < @list.rooms.size %>
           <li data-target="#myCarousel" id='listItem<%= "#{temp_num}" %>' data-slide-to= '<%= "#{temp_num}" %>' class=""></li>
           <% temp_num += 1 %>
         <% end %>
       <% end %>
     </ol>
     <div class="carousel-inner">
-      <% if !list.rooms.empty? %>
-        <% list.rooms.each_with_index do |url, index| %>
+      <% if !@list.rooms.empty? %>
+        <% @list.rooms.each_with_index do |url, index| %>
           <div id='carousel-item<%= "#{index + 1}" %>' class="carousel-item">
             <%= image_tag url.url.to_s, alt: "slide #{index + 1}", style: "min-width: 100%; height: 32rem;" %>
           </div>
           <div class="container">
             <div class="carousel-caption text-left">
-              <% if list.verification %>
-                <h1 class="text-danger"><%= list.name %> <span class="badge badge-pill badge-info">Verified</span></h1>
+              <% if @list.verification %>
+                <h1 class="text-dark"><%= @list.name %>  <span class="badge badge-pill badge-info">Verified</span></h1>
               <% else %>
-                <h1 class="text-danger"><%= list.name %> <span class="badge badge-pill badge-light">Pending</span></h1>
+                <h1 class="text-dark"><%= @list.name %> <span class="badge badge-pill badge-light">Pending</span></h1>
               <% end %>
             </div>
           </div>
@@ -38,22 +37,29 @@
     </a>
   </div>
 
+  <% flash.each do |key, value| %>
+    <div class="alert alert-danger text-center col-lg-4 mx-auto mt-2">
+      <strong><%= value %></strong>
+      <br>
+    </div>
+  <% end %>
+
   <div class="container" style="padding: 15px">
     <div class="row justify-content-lg-center">
       <div class="col-lg-7 text-left">
         <%= image_tag("property.png", class: "rounded-circle", alt: "Property Image", style: "width: 140px; height: 140px") %>
         <h2><u>Room Description</u></h2>
-        <p><%= list.description %></p>
+        <p><%= @list.description %></p>
         <br>
         <h2><u>Address</u></h2>
-        <p><%= list.address %></p>
+        <p><%= @list.address %></p>
         <br>
         <h2><u>Amenities Available</u></h2>
         <ul>
-          <% if list.amenities.empty? %>
+          <% if @list.amenities.empty? %>
             <li>None</li>
           <% else %>
-            <% list.amenities.each do |item| %>
+            <% @list.amenities.each do |item| %>
               <li><%= item %></li>
             <% end %>
           <% end %>
@@ -61,14 +67,25 @@
         <br>
       </div>
       <div class="col-lg-4 text-center">
-        <%= image_tag("profile.png", class: "rounded-circle", alt: "Profile Image", style: "width: 140px; height: 140px") %>
+        <% if @list.user.avatar.size != 0 %>
+          <%= image_tag("#{@list.user.avatar.url}", class: "rounded-circle", alt: "Profile Image", style: "width: 140px; height: 140px") %>          
+        <% elsif @list.user.google_url != nil %>
+          <%= image_tag(@list.user.google_url, class: "rounded-circle", alt: "Profile Image", style: "width: 140px; height: 140px") %>
+        <% else %>
+          <%= image_tag("profile.png", class: "rounded-circle", alt: "Profile Image", style: "width: 140px; height: 140px") %>
+        <% end %>
         <h2>Owner Detail</h2>
         <p>
-          <%= list.user.name %>
+          <%= @list.user.name %>
           <br>
-          <%= list.user.email %>
+          <%= @list.user.email %>
         </p>
-        <p><%= button_to "View details »", "/#{list.user.username}", method: :get, class: "btn btn-secondary" %></p>
+        <p><%= button_to "View details »", "/#{@list.user.username}", method: :get, class: "btn btn-secondary" %></p>
+        <% if signed_in? %>
+          <% if current_user.id === @list.user.id || current_user.role === "admin"%>
+            <%= button_to "Delete Room", "/listing/#{@list.id}", method: :delete, class: "btn btn-danger" %>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -80,24 +97,45 @@
           <h4 class="my-0 font-weight-normal">Price Per Night</h4>
         </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">RM <%= list.price %><small class="text-muted">/ night</small></h1>
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary" data-toggle="modal" data-target="#modalDate">Book Now</button>
+            <h1 class="card-title pricing-card-title">RM <%= @list.price %><small class="text-muted">/ night</small></h1>
+            <% if signed_in? %>
+              <% if current_user.id === @list.user_id %>
+                <button type="button" class="btn btn-lg btn-block btn-outline-primary" data-toggle="modal" data-target="#modalDate" disabled>Book Now</button>
+              <% elsif current_user.role != "customer" %>
+                <button type="button" class="btn btn-lg btn-block btn-outline-primary" data-toggle="modal" data-target="#modalDate" disabled>Book Now</button>
+              <% else %>
+                <button type="button" class="btn btn-lg btn-block btn-outline-primary" data-toggle="modal" data-target="#modalDate">Book Now</button>
+              <% end %>
+            <% else %>
+              <button type="button" class="btn btn-lg btn-block btn-outline-primary" data-toggle="modal" data-target="#modalDate">Book Now</button>
+            <% end %>
           </div>
       </div>
     </div>
+    <div class="text-center col-lg-8 mx-auto">
+      <% if signed_in? %>
+        <% if current_user.role === "moderator" || current_user.role === "admin" %>
+          <% if @list.verification === nil %>
+            <%= button_to "Verify", "/listing/#{@list.id}/verified", method: :patch, class: "btn btn-primary col-lg-3" %>
+          <% else %>
+            <%= button_to "Unverify", "/listing/#{@list.id}/unverified", method: :patch, class: "btn btn-primary col-lg-3" %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
   
-  <div class="modal fade" id="modalDate" tabindex="-1" role="dialog" aria-labelledby="dateModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" id="modalDate" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="dateModalLabel">Choose Date</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
-        <%= form_with scope: :reservation, url: listing_reservation_index_path(list.id), local: true do |form| %>
+        <%= form_with scope: :reservation, url: listing_reservation_index_path(@list.id), local: true do |form| %>
           <div class="modal-body">
             <div class="container">
               <div class="form-group">
+                <div>Check in date</div>
                 <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
                   <%= form.text_field :date_in, class: "form-control datetimepicker-input", date: {target: "#datetimepicker4"} %>
                   <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
@@ -106,6 +144,7 @@
                 </div>
               </div>
               <div class="form-group">
+                <div>Check out date</div>
                 <div class="input-group date" id="datetimepicker5" data-target-input="nearest">
                   <%= form.text_field :date_out, class: "form-control datetimepicker-input", date: {target: "#datetimepicker5"} %>
                   <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
@@ -126,11 +165,13 @@
 </main>
 
 <script type="text/javascript">
-  let listItem = document.getElementById ("listItem0");
-  let carouselItem = document.getElementById ("carousel-item1");
+  let listItem = document.getElementById("listItem0");
+  let carouselItem = document.getElementById("carousel-item1");
 
-  listItem.className += " active";
-  carouselItem.className += " active";
+  if (listItem !== null) {
+    listItem.className += " active";
+    carouselItem.className += " active";
+  }
 
   $(function () {
       $('#datetimepicker4').datetimepicker({

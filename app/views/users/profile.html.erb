@@ -1,29 +1,205 @@
-<% if signed_in? && current_user.id === User.find_by(username: params[:username]).id %>
-  <%= form_with scope: :user_avatar, url: "/users/avatar", local: true do |form| %>
-    <%= form.label :"Upload your avatar" %><br>
-    <%= form.file_field :avatar, multiple: true %>
-    <%= form.hidden_field :avatar_cache %>
-    <p>
-      <label>
-        <%= form.check_box :remove_avatar %>
-        Remove avatar
-      </label>
-    </p>
-    <%= form.submit %>
-  <% end %>
-  <hr>
-  <%= button_to "Post", new_listing_path, method: :get %>
-<% else %>
-  <p>
-    Reservation made:
-    <% User.find_by(username: params[:username]).reservations.each_with_index do |item| %>
-      <ol>
-        <li><%= link_to "#{item.listing.name}", listing_path(item.listing.id) %> Owned by: <%= link_to "#{item.listing.user.username}", "/#{item.listing.user.username}" %>
-          <ul>
-            <li>From: <%= item.date_in %> To <%= item.date_out %> <%= button_to "See reservation", reservation_path(item.id) , method: :get %> </li>
-          </ul>
-        </li>
-      </ol>
-    <% end %>
-  </p>  
-<% end %>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4 my-3">
+      <div class="text-center">
+        <% if @page_owner.avatar.size != 0 %>
+          <%= image_tag("#{@page_owner.avatar.url}", class: "rounded-circle", alt: "Profile Image", style: "width: 100%; height: 300px") %>          
+        <% elsif @page_owner.google_url != nil %>
+          <%= image_tag(@page_owner.google_url, class: "rounded-circle", alt: "Profile Image", style: "width: 100%; height: 300px") %>
+        <% else %>
+          <%= image_tag("profile.png", class: "rounded-circle", alt: "Profile Image", style: "width: 100%; height: 300px") %>
+        <% end %>
+        <% if signed_in? %>
+          <% if current_user.id === @page_owner.id %>
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary my-3" data-toggle="modal" data-target="#modalProfileImage">Change Profile Image</button>
+          <% end %>
+          <% if current_user.role === "admin" && @page_owner.role != "admin" %>
+            <%= button_to "Delete user", "/:username", method: :delete, class: "btn btn-lg btn-block btn-outline-primary my-3" %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="modal fade" id="modalProfileImage" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="profileImageModalLabel">Choose Image</h5>
+            </div>
+            <%= form_with scope: :user_avatar, url: "/users/avatar", local: true do |form| %>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="form-group">
+                    <%= form.file_field :avatar, class: "form-control-file" %>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <%= form.submit "Confirm", class: "btn btn-primary" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container col-lg-7 offset-lg-1">
+      <% if signed_in? %>
+        <% if current_user.id === @page_owner.id && current_user.role === "customer" %>
+          <div class="col-lg-12 my-3">
+            <%= button_to "Post a room!", new_listing_path, method: :get, class: "btn btn-lg btn-block btn-outline-primary" %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <div class="col-lg-12 my-3">
+        <div class="card mb-4 box-shadow">
+          <div class="card-body">
+            <h3 class="card-title d-flex justify-content-between">About <%= @page_owner.username %>
+              <% if signed_in? %>
+                <% if current_user.id === @page_owner.id %>             
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-ms btn-outline-primary" data-toggle="modal" data-target="#modalEditProfile">Update Profile</button>
+                  </div>
+                <% end %>
+              <% end %>
+            </h3>
+            <div class="card-text">
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <p><%= @page_owner.email %></p>
+                  </div>
+                  <div class="col-lg-6">
+                    <p>Member since: <%= @page_owner.created_at.strftime "%Y-%m-%d" %></p>
+                  </div>
+                  <div class="col-lg-6">
+                    <p>Number of room posted: <%= @page_owner.listings.size %></p>
+                  </div>
+                  <div class="col-lg-6">
+                    <p>Number of room booked: <%= @page_owner.reservations.size %></p>
+                  </div>
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+
+        <div class="modal fade" id="modalEditProfile" tabindex="-1" aria-labelledby="profileEditModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="profileEditModalLabel">Profile Update</h5>
+              </div>
+              <%= form_with scope: :user_data, url: "/:username", local: true do |form| %>
+                <div class="modal-body">
+                  <div class="container">
+                    <div class="form-group">
+                      <%= form.label :"Name"%>
+                      <%= form.text_field :name, class: "form-control" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :"Username"%>
+                      <%= form.text_field :username, class: "form-control" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :"Email"%>
+                      <%= form.text_field :email, class: "form-control" %>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <%= form.submit "Confirm", class: "btn btn-primary" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if @page_owner.listings.size != 0 %>
+        <div class="col-lg-12 my-3">
+          <div class="card mb-4 box-shadow">
+            <div class="card-body">
+              <h3 class="card-title">Room Posted History</h3>
+              <div class="card-text">
+                <% @page_owner.listings.each do |item| %>
+                  <ul>
+                    <li><%= link_to "#{item.name}", listing_path(item.id) %></li>
+                  </ul>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @page_owner.reservations.size != 0 %>
+        <div class="col-lg-12 my-3">
+          <div class="card mb-4 box-shadow">
+            <div class="card-body">
+              <h3 class="card-title">Room Booked History</h3>
+              <div class="card-text">
+                <% @page_owner.reservations.each do |item| %>
+                  <ul>
+                    <li><%= link_to "#{item.listing.name}", listing_path(item.listing.id) %> 
+                      <% if item.payment === false %>
+                        <span class="badge badge-pill badge-light">Not paid</span>
+                      <% else %>
+                        <span class="badge badge-pill badge-info">Paid</span>
+                      <% end %>
+                    </li>
+                  </ul>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @page_owner.reservations.where(payment: true).size != 0 %>
+        <% temp = 1 %>
+        <% @page_owner.reservations.where(payment: true).each do |item| %>
+          <% if item.date_in >= Time.now %>
+            <% break %>
+          <% end %>
+          <% temp = 0 %>
+        <% end %>
+        <% if temp === 1 %>
+          <div class="col-lg-12 my-3">
+            <div class="card mb-4 box-shadow">
+              <div class="card-body">
+                <h3 class="card-title">Room Booked That Coming Soon</h3>
+                <div class="card-text">
+                  <% @page_owner.reservations.where(payment: true).each do |item| %>
+                    <ul>
+                      <li><%= link_to "#{item.listing.name}", "/reservation/#{item.id}" %></li>
+                    </ul>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if @page_owner.reservations.where(payment: false).size != 0 %>
+        <div class="col-lg-12 my-3">
+          <div class="card mb-4 box-shadow">
+            <div class="card-body">
+              <h3 class="card-title">Room Booked That Needed Checkout</h3>
+              <div class="card-text">
+                <% @page_owner.reservations.where(payment: false).each do |item| %>
+                  <ul>
+                    <li><%= link_to "#{item.listing.name}", "/reservation/#{item.id}" %></li>
+                  </ul>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

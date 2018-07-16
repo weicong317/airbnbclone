@@ -5,14 +5,14 @@ class SessionsController < Clearance::SessionsController
 
         # if: previously already logged in with OAuth
         if authentication.user
-        user = authentication.user
-        authentication.update_token(auth_hash)
-        @next = root_path
-        # else: user logs in with OAuth for the first time
+            user = authentication.user
+            authentication.update_token(auth_hash)
+            @next = root_path
+            # else: user logs in with OAuth for the first time
         else
-        user = User.create_with_auth_and_hash(authentication, auth_hash)
-        # you are expected to have a path that leads to a page for editing user details
-        @next = root_path
+            user = User.create_with_auth_and_hash(authentication, auth_hash)
+            # you are expected to have a path that leads to a page for editing user details
+            @next = root_path
         end
 
         sign_in(user)

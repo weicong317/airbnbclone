@@ -1,17 +1,150 @@
-<p>Reservation number: <%= @reservation.id %></p>
-<div>Details:
-  <p>Name of the room: <%= @reservation.listing.name %></p>
-  <p>Description of the room: <%= @reservation.listing.description %></p>
-  <p>Price: <%= @reservation.listing.price %></p>
-  <p>Location: <%= @reservation.listing.location %></p>
-  <p>Owner: <%= link_to "#{@reservation.listing.user.username}", "/#{@reservation.listing.user.username}" %></p>
-  <br>
-  <p>Booked date:
-    <ul>
-      <li>From: <strong><%= @reservation.date_in %></strong> to <strong><%= @reservation.date_out %></strong> By: <%= link_to "#{@reservation.user.username}", "/#{@reservation.user.username}" %></li>
-    </ul>
-  </p>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>Reservation Confirm Page</h2>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Reservation Number</span>
+        <span class="badge badge-info badge-pill"><%= @reservation.id %></span>
+      </h4>
+
+      <h5 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Number of night</span>
+        <span class="badge badge-info badge-pill"><%= (@reservation.date_out - @reservation.date_in).to_i %></span>
+      </h5>
+            
+      <h5 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Total</span>
+        <span class="badge badge-info badge-pill">RM <%= '%.2f' % (((@reservation.date_out - @reservation.date_in).to_i) * @reservation.listing.price) %></span>
+      </h5>
+
+      <% if @reservation.payment != true %>
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary" data-toggle="modal" data-target="#modalDateEdit">Edit date</button>
+          </div>
+
+          <div class="modal fade" id="modalDateEdit" tabindex="-1" aria-labelledby="editDateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editDateModalLabel">Choose Date</h5>
+                </div>
+                <%= form_with scope: :reservation, url: "/reservation/#{@reservation.id}", local: true, method: :patch do |form| %>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="form-group">
+                        <div>Check in date</div>
+                        <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+                          <%= form.text_field :date_in, class: "form-control datetimepicker-input", date: {target: "#datetimepicker4"}, value: "#{@reservation.date_in.strftime("%B %d %Y")}" %>
+                          <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div>Check out date</div>
+                        <div class="input-group date" id="datetimepicker5" data-target-input="nearest">
+                          <%= form.text_field :date_out, class: "form-control datetimepicker-input", date: {target: "#datetimepicker5"}, value: "#{@reservation.date_out.strftime("%B %d %Y")}" %>
+                          <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <%= form.submit "Confirm", class: "btn btn-primary" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <%= button_to "Cancel booking", reservation_path(@reservation.id), method: :delete, class: "btn btn-lg btn-block btn-outline-danger" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <%= button_to "Checkout later", "/#{current_user.username}", method: :get, class: "btn btn-lg btn-block btn-outline-primary" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <%= button_to "Checkout", "/listing/#{@reservation.listing.id}/reservation/#{@reservation.id}/payment/new", method: :get, class: "btn btn-lg btn-block btn-outline-success" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3">Booking Details</h4>
+      <div class="row">
+        <div class="col-md-3 mb-3">Host of room</div>
+        <div class="col-md-7 offset-md-2 mb-3"><%= @reservation.user.username %></div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mb-3">Name of room</div>
+        <div class="col-md-7 offset-md-2 mb-3"><%= @reservation.listing.name %></div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mb-3">Description of room</div>
+        <div class="col-md-7 offset-md-2 mb-3"><%= @reservation.listing.description %></div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mb-3">Address</div>
+        <div class="col-md-7 offset-md-2 mb-3"><%= @reservation.listing.address %></div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mb-3">Amenities available</div>
+        <div class="col-md-7 offset-md-2 mb-3">
+          <% @reservation.listing.amenities.each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mb-3">Booking date</div>
+        <div class="col-md-7 offset-md-2 mb-3 text-info">
+          <li style="list-style-type: none;">From
+            <li><%= @reservation.date_in %></li>
+          </li>
+          <li style="list-style-type: none;">to 
+            <li><%= @reservation.date_out %></li>
+          </li>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<% if current_user.id === @reservation.user.id %>
-  <%= button_to "Cancel booking", reservation_path(@reservation.id), method: :delete %>
-<% end %>
+
+<script type="text/javascript">
+  $(function () {
+      $('#datetimepicker4').datetimepicker({
+          format: 'LL'
+      });
+      $('#datetimepicker5').datetimepicker({
+          format: 'LL',
+          useCurrent: false
+      });
+      $("#datetimepicker4").on("change.datetimepicker", function (e) {
+          $('#datetimepicker5').datetimepicker('minDate', e.date);
+      });
+      $("#datetimepicker5").on("change.datetimepicker", function (e) {
+          $('#datetimepicker4').datetimepicker('maxDate', e.date);
+      });
+  });
+</script>

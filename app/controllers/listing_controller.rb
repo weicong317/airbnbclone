@@ -1,8 +1,19 @@
 class ListingController < ApplicationController
-  # before_action :require_login, only: [:show]
+  before_action :require_login, only: [:create, :new, :edit, :update, :destroy, :verify, :unverify]
 
   def index
-    @lists = Listing.order(:id).reverse_order.page params[:page]
+    if params[:search]
+      temp = search_params[:country]
+      if ISO3166::Country.find_country_by_name(temp)
+        country_code = ISO3166::Country.find_country_by_name(temp).alpha2
+        @lists = Listing.where('country = "#{country_code}" AND verification = 1').order(:id).reverse_order.page params[:page]
+      else
+        flash[:notice] = " No such country!"
+        @lists = Listing.where(verification: 1).order(:id).reverse_order.page params[:page]
+      end
+    else
+      @lists = Listing.where(verification: 1).order(:id).reverse_order.page params[:page]
+    end
   end
 
   def create
@@ -23,9 +34,11 @@ class ListingController < ApplicationController
   end
   
   def edit
+    @list = Listing.find(params[:id])
   end
   
   def show
+    @list = Listing.find(params[:id])
   end
   
   def update
@@ -46,19 +59,16 @@ class ListingController < ApplicationController
 
   def unverify
     list = Listing.find(params[:id])
-    list.update(verification: 0)
+    list.update(verification: nil)
     redirect_to listing_path
   end
   
   private
   def create_params
-    params.require(:listing).permit(:name, :description, :price, :address, :country, {rooms: [], amenities: []})
+    params.require(:listing).permit(:name, :description, :price, :address, :country, :remove_rooms, {rooms: []}, amenities: [])
   end
 
-  def require_login
-    unless signed_in?
-      flash[:Error] = "You must be logged in to access this section"
-      redirect_to sign_in_path
-    end
+  def search_params
+    params.require(:search).permit(:country)
   end
 end

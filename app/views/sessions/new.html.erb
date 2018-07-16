@@ -1,14 +1,12 @@
-<div id="clearance" class="sign-in text-center">
-  <%= form_for :session, url: session_path, html: {class: "form-signup"} do |form| %>
+<div id="clearance" class="sign-in text-center form-signup">
+  <%= form_for :session, url: session_path do |form| %>
     <%= link_to image_tag("01_06_2017_airbnb_800x600.gif", class: "mb-4", alt: "Home Page", style: "width: 72px; height: 72px;"), root_path %>
 
-    <% if flash %>
-      <% flash.each do |key, value| %>
-        <div class="alert alert-danger" role="alert">
-          <strong><%= value %></strong>
-          <br>
-        </div>
-        <% end %>
+    <% flash.each do |key, value| %>
+      <div class="alert alert-danger">
+        <strong><%= value %></strong>
+        <br>
+      </div>
     <% end %>
 
     <div class="text-field">
@@ -26,12 +24,9 @@
       <br>
       <%= form.submit :"Sign in", class: "btn btn-lg btn-primary btn-block" %>
     </div>
-
-    <div class="other-links">
-      <br>
-      <% if Clearance.configuration.allow_sign_up? %>
-        <%= link_to "Sign in with Google", "/auth/google_oauth2", method: :get, class: "btn btn-lg btn-primary btn-block"%>
-      <% end %>
-    </div>
   <% end %>
+  <div class="other-links">
+    <br>
+    <%= button_to "Sign in with Google", "/auth/google_oauth2", method: :get, class: "btn btn-lg btn-primary btn-block"%>
+  </div>
 </div>

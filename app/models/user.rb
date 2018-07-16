@@ -7,12 +7,16 @@ class User < ApplicationRecord
   has_many :reservations, dependent: :destroy
   has_many :authentications, dependent: :destroy
 
+  validates :role, presence: true
+
   def self.create_with_auth_and_hash(authentication, auth_hash)
     user = self.create!(
+      role: 2,
       name: auth_hash["info"]["name"],
-      username: auth_hash["info"]["name"],
+      username: auth_hash["info"]["first_name"],
       email: auth_hash["info"]["email"],
-      password: SecureRandom.hex(10)
+      password: SecureRandom.hex(10),
+      avatar_url: auth_hash["info"]["image"]
     )
     user.authentications << authentication
     return user

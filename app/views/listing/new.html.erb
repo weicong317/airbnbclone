@@ -1,44 +1,79 @@
-<% if flash %>
-  <% flash.each do |key, value| %>
-    <p><strong><%= key %>: <%= value[0] %></strong></p>
+<div class="container my-3">
+  <h2>New Room Form</h2>
+  <hr>
+  <%= form_with scope: :listing, url: listing_index_path, local: true do |form| %>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <%= form.label :"Name of room" %>
+        <%= form.text_field :name, class: "form-control", placeholder: "example" %>
+      </div>
+    </div>
+
+      <div class="form-group">
+        <%= form.label :"Description of room" %>
+        <%= form.text_area :description, class: "form-control", placeholder: "example" %>
+      </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.label :"Price per night" %>
+        <%= form.number_field :price , step: 0.01, class: "form-control", placeholder: "0.00" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :Address %>
+      <%= form.text_area :address, class: "form-control", placeholder: "1234 Main st" %>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.label :Country %>
+        <%= form.country_select :country, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <%= form.label :"Select amenities available (can tick more than 1):" %>
+        <div class="container">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <%= form.check_box :amenities, {multiple: true}, "wifi", nil %> 
+                <%= form.label :wifi, "wifi", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <%= form.check_box :amenities, {multiple: true}, "parking", nil %>
+                <%= form.label :parking, "parking", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <%= form.check_box :amenities, {multiple: true}, "cooking", nil %>
+                <%= form.label :cooking, "cooking", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="form-check">
+                <%= form.check_box :amenities, {multiple: true}, "swimming pool", nil %>
+                <%= form.label :"swimming pool", "swimming pool", class: "form-check-label" %>
+              </div>                        
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :"Upload your room images" %>
+      <%= form.file_field :rooms, multiple: true, class: "form-control-file" %>
+    </div>
+    
+    <div class="form-group">
+      <%= form.submit "Submit", class: "btn btn-primary" %>
+    </div>
   <% end %>
-<% end %>
-
-<%= form_with scope: :listing, url: listing_index_path, local: true do |form| %>
-  <p>
-    <%= form.label :"Name of room" %><br>
-    <%= form.text_field :name %>
-  </p>
-
-  <p>
-    <%= form.label :Description %><br>
-    <%= form.text_area :description %>
-  </p>
-
-  <p>
-    <%= form.label :Price %><br>
-    <%= form.number_field :price , step: 0.01%>
-  </p>
-
-  <p>
-    <%= form.label :Location %><br>
-    <%= form.text_area :location %>
-  </p>
-
-  <p>
-    <%= form.label :"Upload your room images" %><br>
-    <%= form.file_field :rooms, multiple: true %>
-    <%= form.hidden_field :rooms_cache %>
-  </p>
-
-  <p>
-    <label>
-      <%= form.check_box :remove_rooms %>
-      Remove previous room images
-    </label>
-  </p>
-
-  <p>
-    <%= form.submit %>
-  </p>
-<% end %>
+</div>
