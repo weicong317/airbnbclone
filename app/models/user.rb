@@ -16,7 +16,7 @@ class User < ApplicationRecord
       username: auth_hash["info"]["first_name"],
       email: auth_hash["info"]["email"],
       password: SecureRandom.hex(10),
-      avatar_url: auth_hash["info"]["image"]
+      google_url: auth_hash["info"]["image"]
     )
     user.authentications << authentication
     return user
