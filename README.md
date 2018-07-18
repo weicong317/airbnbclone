@@ -1,24 +1,11 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A simple Airbnb like webapp is made within 2 weeks. First webapp ever since learning coding.
 
-Things you may want to cover:
+Modification is still needed.
 
-* Ruby version
+Already pushed to heroku and the link is as below
 
-* System dependencies
+http://thawing-reef-57608.herokuapp.com
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Thank you.
