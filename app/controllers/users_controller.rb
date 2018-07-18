@@ -5,7 +5,7 @@ class UsersController < ApplicationController
         if @user.save
             UserJob.perform_later(@user)
             sign_in @user
-            redirect_to listing_index_path
+            redirect_to root_path
         else
             flash.now[:notice] = "Sign up failed!"
             redirect_to sign_up_path
