@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   get "/users" => "homepage#users"
   get "/pending" => "homepage#pending"
   get "/verified" => "homepage#verified"
+  get "/search" => "listing#filter"
+  get "/search/autocomplete" => "listing#autocomplete"
 
   get "/:username" => "users#new"
   delete "/:username" => "users#destroy"

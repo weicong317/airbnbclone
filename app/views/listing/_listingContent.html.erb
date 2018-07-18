@@ -1,0 +1,42 @@
+<div class="row">
+  <% @lists.each do |row| %>
+    <div class="col-md-4">
+      <div class="card mb-4 box-shadow">
+        <% if !row.rooms.empty? %>
+          <%= image_tag(row.rooms[-1].url.to_s, class: "card-img-top", alt: "Empty Thumbnail", style: "width: 100%; height: 225px; display: block;") %>
+        <% else %>
+          <%= image_tag("empty_thumbnail.png", class: "card-img-top", alt: "Empty Thumbnail", style: "width: 100%; height: 225px; display: block;") %>
+        <% end %>
+        <div class="card-body">
+          <div class="card-text">
+            <% if row.verification %>
+              <p><span class="badge badge-pill badge-info">Verified</span></p>
+            <% else %>
+              <p><span class="badge badge-pill badge-light">Pending</span></p>
+            <% end %>
+            <p>
+              <u><%= row.name.strip %></u>
+              <br>
+              <% if row.description.size <= 128 %>
+                <%= row.description %>
+              <% else %>
+                <%= row.description[0..128] %>...
+              <% end %>
+              <hr>
+              RM<%= row.price %> per night
+            </p>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <%= button_to "View", listing_path(row.id), method: :get, class: "btn btn-sm btn-outline-secondary" %>
+              <% if signed_in? && current_user.id === row.user.id %>
+                <%= button_to "Edit", edit_listing_path(row.id), method: :get, class: "btn btn-sm btn-outline-secondary" %>
+              <% end %>
+            </div>
+            <small class="text-muted"><%= ((Time.now - row.updated_at) / (60 * 60 * 24)).round %> days</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

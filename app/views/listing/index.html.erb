@@ -1,13 +1,56 @@
 <div class="container">
-  <%= form_with scope: :search, url: listing_index_path, method: :get, local: true do |form| %>
+  <%= form_with scope: :search, url: search_path, method: :get, remote: true do |form| %>
     <div class="row">
       <div class="col-lg-6">
-        <%= form.search_field :country, class: "form-control mr-2 mt-2", placeholder: "Country Name" %>
+        <%= form.search_field :country, class: "form-control mr-2 mt-2", placeholder: "Country Name", list: "dropdown" %>
+        <datalist id="dropdown"></datalist>
       </div>
-      <%= form.submit "Search", class: "btn btn-outline-danger mt-2" %>
+      <div class="col-lg-3">
+        <%= form.number_field :price, min: 0, step: 0.01, class: "form-control mr-2 mt-2", placeholder: "Maximum price acceptable"%>
+      </div>
+      <%= form.submit "Filter", class: "btn btn-outline-primary mt-2" %>
+    </div>
+
+    <div class="form-control mr-2 mt-2">
+      <div class="row">
+        <div class="col-lg-6">
+          <%= form.label :"Select preferable amenities (can tick more than 1):" %>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="form-check">
+            <%= form.check_box :amenities, {multiple: true}, "wifi", nil %> 
+            <%= form.label :wifi, "wifi", class: "form-check-label" %>
+          </div>
+        </div>
+      
+        <div class="col-lg-3">
+          <div class="form-check">
+            <%= form.check_box :amenities, {multiple: true}, "parking", nil %>
+            <%= form.label :parking, "parking", class: "form-check-label" %>
+          </div>
+        </div>
+      
+        <div class="col-lg-3">
+          <div class="form-check">
+            <%= form.check_box :amenities, {multiple: true}, "cooking", nil %>
+            <%= form.label :cooking, "cooking", class: "form-check-label" %>
+          </div>
+        </div>
+      
+        <div class="col-lg-3">
+          <div class="form-check">
+            <%= form.check_box :amenities, {multiple: true}, "swimming pool", nil %>
+            <%= form.label :"swimming pool", "swimming pool", class: "form-check-label" %>
+          </div> 
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
+
 <% if !@lists.empty? %>
   <main>
     <% flash.each do |key, value| %>
@@ -17,7 +60,7 @@
       </div>
     <% end %>
     <div class="album py-5">
-      <div class="container">
+      <div class="container" id="jsArea">
         <div class="row">
           <% @lists.each do |row| %>
             <div class="col-md-4">
@@ -63,7 +106,7 @@
       </div>
     </div>
   </main>
-  <%= paginate @lists%>
+  <%= paginate @lists %>
   <% if @lists.size >= 4%>
     <footer class="text-muted">
       <div class="container">

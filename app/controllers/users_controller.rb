@@ -7,7 +7,7 @@ class UsersController < ApplicationController
             sign_in @user
             redirect_to listing_index_path
         else
-            flash[:notice] = "Sign up failed!"
+            flash.now[:notice] = "Sign up failed!"
             redirect_to sign_up_path
         end
     end
