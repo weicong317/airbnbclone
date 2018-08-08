@@ -1,3 +1,5 @@
+# to accept payment, currently is testing environment only
+
 class BraintreeController < ApplicationController
   def new
     @client_token = Braintree::ClientToken.generate

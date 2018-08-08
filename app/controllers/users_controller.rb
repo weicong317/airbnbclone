@@ -3,6 +3,7 @@ class UsersController < ApplicationController
         @user = User.new(user_params)
         @user.update(role: 2)
         if @user.save
+            # send email to inform signup done
             UserJob.perform_later(@user)
             sign_in @user
             redirect_to root_path
